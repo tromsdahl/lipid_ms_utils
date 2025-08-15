@@ -1,9 +1,36 @@
-use std::io;
+use std::io::{self, Read};
 
 fn main() {
 
     println!("Lipid MS Utilities\nSelect an option:");
-    println!("1. Lipid mass calculator")
+    println!("1. Lipid mass calculator");
+    println!("Press 'q' to quit.");
+
+    loop {
+        println!("Enter a number to select an option:");
+
+        let mut user_selection = String::new();
+
+        io::stdin()
+            .read_line(&mut user_selection)
+            .expect("Failed to read line.");
+
+        let user_selection: u32 = match user_selection.trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
+
+    match user_selection {
+        1 => lipid_calculator,
+        'q' | 'Q' => {
+            println!("Program closing!");
+            break;
+        },
+        _ => break,
+    }
+
+    }
+
 }
 
 mod lipid_calculator {
