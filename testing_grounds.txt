@@ -1,0 +1,74 @@
+// set atom masses to constants
+    const CARBON: f64 = 12.000000;
+    const HYDROGEN: f64 = 1.007825;
+    const OXYGEN: f64 = 15.994915;
+    //const PHOSPH: f64 = 30.973762;
+    //const NITROGEN: f64 = 14.003074;
+    //const AMMONIUM: f64 = 18.03382555;
+    //const SODIUM: f64 = 22.989769;
+    //const POTASSIUM: f64 = 38.963707;
+    //const SULFUR: f64 = 31.972072;
+
+fn main() {
+
+    let lipid_classes = vec!["TG", "CE", "MG", "DG", "PC", "LPC", "PE", "LPE", "PS", "LPS", "PI", "LPI"];
+
+    let my_text = String::from("TG-62:4");
+
+    /*let mut text_pieces = Vec::new();
+
+    for piece in my_text.chars() {
+        text_pieces.push(piece);
+    };
+
+    for piece in text_pieces {
+        println!("{piece}");
+    }*/
+
+    let class_index = my_text.find('-').unwrap();
+    let lipid_class = &my_text[..class_index];
+
+    if lipid_classes.contains(&lipid_class) {
+        println!("Lipid class is: {lipid_class}")
+    } else {
+        println!("Lipid class is not recognized!")
+    }
+
+    let carbon_index = my_text.find(':').unwrap();
+    let fa_carbon = &my_text[class_index + 1usize..carbon_index];
+
+    let desat_index = my_text.len();
+    let fa_desat = &my_text[carbon_index + 1..desat_index];
+    
+    println!("Lipid class is: {lipid_class}");
+    println!("Total number of carbons is: {fa_carbon}");
+    println!("Total number of unsaturations is: {fa_desat}");
+
+    let calc_mass = match lipid_class {
+        "TG" => tg_calc(fa_carbon, fa_desat),
+        _ => String::from("That lipid class hasn't been defined yet. Hold tight buckaroo!"),
+    };
+    
+    
+    println!("The monoisotopic mass of {my_text} is: {calc_mass}");
+
+    
+    /*if let Some(index) = my_text.find('-') {
+        let lipid_class = &my_text[..index];
+        println!("Lipid class: {lipid_class}");
+    } else {
+        println!("Check the formatting of your input.");
+    } */
+
+}
+
+fn tg_calc(carb: &str, desat: &str) -> String {
+
+    let carb_no: f64 = carb.parse().unwrap();
+    let desat_no: f64 = desat.parse().unwrap();
+        
+    let monoiso_mass: f64 = (CARBON * (carb_no + 3.0)) + (HYDROGEN * ((desat_no * 2.0) - (desat_no * 2.0) + 2.0)) + (OXYGEN * 6.0);
+
+    format!("{monoiso_mass:.4}")
+
+}

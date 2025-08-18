@@ -1,0 +1,114 @@
+use std::io;
+
+fn main() {
+    println!("Common conversion calculator (v1)");
+    println!("Convert commonly used units. Please select which units you would like converted: ");
+
+    loop {
+
+        println!("1. °F to °C");
+        println!("2. lbs. to kg");
+        println!("3. ft to m");
+        println!("4. quit.");
+        
+        let mut input = String::new();
+
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read line");
+
+        let input: u32 = match input.trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+
+        };
+
+        println!("You entered: {input}");
+
+        match input {
+            1 => temp(),
+            2 => weight(),
+            3 => distance(),
+            4 => break,
+            _ => continue,
+        };
+    }
+}
+
+fn temp() {
+    loop {
+        println!("Enter in the temperature you want converted from °F to °C:");
+        let mut temp_in_f = String::new();
+        
+        io::stdin()
+            .read_line(&mut temp_in_f)
+            .expect("Failed to read line.");
+
+        let temp_in_f: f32 = match temp_in_f.trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
+
+    println!("You entered: {temp_in_f}°F.");
+
+    let temp_in_c = (temp_in_f - 32.0) * (5.0 / 9.0);
+
+    println!("The temperature of {temp_in_f}°F is: {temp_in_c}°C");
+
+    break;
+
+    };
+}
+
+fn weight() {
+    loop {
+        println!("Enter in the weight you want converted from lbs to kg:");
+        let mut wt_in_lbs = String::new();
+        
+        io::stdin()
+            .read_line(&mut wt_in_lbs)
+            .expect("Failed to read line.");
+
+        let wt_in_lbs: f32 = match wt_in_lbs.trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
+
+    println!("You entered: {wt_in_lbs} lbs.");
+
+    let wt_in_kg = wt_in_lbs / 2.20462;
+
+    println!("The weight of {wt_in_lbs} lbs is: {wt_in_kg} kg");
+
+    break;
+
+    };
+
+}
+
+fn distance() {
+
+    loop {
+        println!("Enter in the distance you want converted from feet to meters:");
+        let mut dist_in_ft = String::new();
+        
+        io::stdin()
+            .read_line(&mut dist_in_ft)
+            .expect("Failed to read line.");
+
+        let dist_in_ft: f32 = match dist_in_ft.trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
+
+    println!("You entered: {dist_in_ft} ft.");
+
+    let dist_in_m = dist_in_ft * 0.3048;
+
+    println!("The distance of {dist_in_ft} ft is: {dist_in_m} m");
+
+    break;
+
+    };
+
+}
