@@ -4,8 +4,8 @@ use std::io;
 const CARBON: f64 = 12.000000;
 const HYDROGEN: f64 = 1.007825;
 const OXYGEN: f64 = 15.994915;
-//const PHOSPH: f64 = 30.973762;
-//const NITROGEN: f64 = 14.003074;
+const PHOSPH: f64 = 30.973762;
+const NITROGEN: f64 = 14.003074;
 const AMMONIUM: f64 = 18.03382555;
 const SODIUM: f64 = 22.989769;
 const POTASSIUM: f64 = 38.963707;
@@ -60,6 +60,9 @@ pub fn lipid_calc_funct () {
 
         let calc_masses = match lipid_class {
             "TG" => tg_calc(&fa_carbon_no, &fa_desat_no),
+            "DG" => dg_calc(&fa_carbon_no, &fa_desat_no),
+            "MG" => mg_calc(&fa_carbon_no, &fa_desat_no),
+            "PC" => pc_calc(&fa_carbon_no, &fa_desat_no),
             _ => {
                 println!("That lipid class hasn't been defined yet! Hold tight buckaroo!");
                 continue;
@@ -118,7 +121,7 @@ pub fn lipid_calc_funct () {
         fn tg_calc(carb: &f64, desat: &f64) -> Vec<String> {
             let mut calculated_masses = Vec::new();
 
-            let monoiso_mass: f64 = (CARBON * (carb + 3.0)) + (HYDROGEN * ((desat * 2.0) - (desat * 2.0) + 2.0)) + (OXYGEN * 6.0);
+            let monoiso_mass: f64 = (CARBON * (carb + 3.0)) + (HYDROGEN * ((carb * 2.0) - (desat * 2.0) + 2.0)) + (OXYGEN * 6.0);
 
             let tg_h_adduct = &monoiso_mass + HYDROGEN;
             let tg_na_adduct = &monoiso_mass + SODIUM;
@@ -132,6 +135,87 @@ pub fn lipid_calc_funct () {
             let nh4_adduct_form = format!("{tg_nh4_adduct:.4}");
 
             calculated_masses.push(monoiso_mass_form);
+            calculated_masses.push(h_adduct_form);
+            calculated_masses.push(na_adduct_form);
+            calculated_masses.push(k_adduct_form);
+            calculated_masses.push(nh4_adduct_form);
+
+            calculated_masses
+        }
+
+        fn dg_calc(carb: &f64, desat: &f64) -> Vec<String> {
+            let mut calculated_masses = Vec::new();
+
+            let monoiso_mass: f64 = (CARBON * (carb + 3.0)) + (HYDROGEN * ((carb * 2.0) - (desat * 2.0) + 4.0)) + (OXYGEN * 5.0);
+
+            let dg_h_adduct = &monoiso_mass + HYDROGEN;
+            let dg_na_adduct = &monoiso_mass + SODIUM;
+            let dg_k_adduct = &monoiso_mass + POTASSIUM;
+            let dg_nh4_adduct = &monoiso_mass + AMMONIUM;
+
+            let monoiso_mass_form = format!("{monoiso_mass:.4}");
+            let h_adduct_form = format!("{dg_h_adduct:.4}");
+            let na_adduct_form = format!("{dg_na_adduct:.4}");
+            let k_adduct_form = format!("{dg_k_adduct:.4}");
+            let nh4_adduct_form = format!("{dg_nh4_adduct:.4}");
+
+            calculated_masses.push(monoiso_mass_form);
+            calculated_masses.push(h_adduct_form);
+            calculated_masses.push(na_adduct_form);
+            calculated_masses.push(k_adduct_form);
+            calculated_masses.push(nh4_adduct_form);
+
+            calculated_masses
+        }
+
+        fn mg_calc(carb: &f64, desat: &f64) -> Vec<String> {
+            let mut calculated_masses = Vec::new();
+
+            let monoiso_mass: f64 = (CARBON * (carb + 3.0)) + (HYDROGEN * ((carb * 2.0) - (desat * 2.0) + 6.0)) + (OXYGEN * 4.0);
+
+            let mg_h_adduct = &monoiso_mass + HYDROGEN;
+            let mg_na_adduct = &monoiso_mass + SODIUM;
+            let mg_k_adduct = &monoiso_mass + POTASSIUM;
+            let mg_nh4_adduct = &monoiso_mass + AMMONIUM;
+
+            let monoiso_mass_form = format!("{monoiso_mass:.4}");
+            let h_adduct_form = format!("{mg_h_adduct:.4}");
+            let na_adduct_form = format!("{mg_na_adduct:.4}");
+            let k_adduct_form = format!("{mg_k_adduct:.4}");
+            let nh4_adduct_form = format!("{mg_nh4_adduct:.4}");
+
+            calculated_masses.push(monoiso_mass_form);
+            calculated_masses.push(h_adduct_form);
+            calculated_masses.push(na_adduct_form);
+            calculated_masses.push(k_adduct_form);
+            calculated_masses.push(nh4_adduct_form);
+
+            calculated_masses
+        }
+
+        fn pc_calc(carb: &f64, desat: &f64) -> Vec<String> {
+            let mut calculated_masses = Vec::new();
+
+            let monoiso_mass: f64 = (CARBON * (carb + 8.0)) + (HYDROGEN * ((carb * 2.0) - (desat * 2.0) + 16.0)) + (OXYGEN * 8.0) + NITROGEN + PHOSPH;
+
+            let pc_h_minus = &monoiso_mass - HYDROGEN;
+            let pc_ac_minus = &monoiso_mass - HYDROGEN + ((2.0 * CARBON) + (2.0 * OXYGEN) + (3.0 * HYDROGEN));
+            let pc_h_adduct = &monoiso_mass + HYDROGEN;
+            let pc_na_adduct = &monoiso_mass + SODIUM;
+            let pc_k_adduct = &monoiso_mass + POTASSIUM;
+            let pc_nh4_adduct = &monoiso_mass + AMMONIUM;
+
+            let monoiso_mass_form = format!("{monoiso_mass:.4}");
+            let h_minus_form = format!("{pc_h_minus:.4}");
+            let ac_minus_form = format!("{pc_ac_minus:.4}");
+            let h_adduct_form = format!("{pc_h_adduct:.4}");
+            let na_adduct_form = format!("{pc_na_adduct:.4}");
+            let k_adduct_form = format!("{pc_k_adduct:.4}");
+            let nh4_adduct_form = format!("{pc_nh4_adduct:.4}");
+
+            calculated_masses.push(monoiso_mass_form);
+            calculated_masses.push(h_minus_form);
+            calculated_masses.push(ac_minus_form);
             calculated_masses.push(h_adduct_form);
             calculated_masses.push(na_adduct_form);
             calculated_masses.push(k_adduct_form);
