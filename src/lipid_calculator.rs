@@ -27,7 +27,13 @@ pub fn lipid_calc_funct () {
             .read_line(&mut lipid_entry)
             .expect("Failed to read line.");
 
-        let class_index = lipid_entry.find('-').unwrap();
+        let class_index = match lipid_entry.find('-') {
+            Some(n) => n,
+            None => {
+                println!("Formatting not recognized! A '-' wasn't found!");
+                continue;
+            }
+        };
         let lipid_class = &lipid_entry[..class_index];
 
         if !lipid_classes.contains(&lipid_class) {
@@ -35,21 +41,39 @@ pub fn lipid_calc_funct () {
             continue;
         }
 
-        let carbon_index = lipid_entry.find(':').unwrap();
+        let carbon_index = match lipid_entry.find(':') {
+            Some(n) => n,
+            None => {
+                println!("Formatting not recognized! A ':' wasn't found!");
+                continue;
+            }
+        };
         let fa_carbon = &lipid_entry[class_index + 1usize..carbon_index];
-        let fa_carbon_no: f64 = fa_carbon.parse().unwrap();
+        let fa_carbon_no: f64 = match fa_carbon.parse() {
+            Ok(n) => n,
+            Err(e) => {
+                println!("The FA carbon number wasn't recognized! You entered: {e}");
+                continue;
+            }
+        };
 
         if !(fa_carbon_no > 0.0) {
-            println!("The FA carbons is not a number! You entered: {fa_carbon}");
+            println!("The FA carbons is not a positive number! You entered: {fa_carbon}");
             continue;
         }
 
         let desat_index = lipid_entry.len();
         let fa_desat = &lipid_entry[carbon_index + 1..desat_index];
-        let fa_desat_no: f64 = fa_desat.trim().parse().unwrap();
+        let fa_desat_no: f64 = match fa_desat.trim().parse() {
+            Ok(n) => n,
+            Err(e) => {
+                println!("The FA unsaturation number wasn't recognized! You entered: {e}");
+                continue;
+            }
+        };
 
         if !(fa_desat_no >= 0.0) {
-            println!("The FA unsaturations is not a number! You entered: {fa_desat}");
+            println!("The FA unsaturations is not a positive number! You entered: {fa_desat}");
             continue;
         }
 

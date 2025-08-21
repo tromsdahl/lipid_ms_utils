@@ -12,19 +12,37 @@ pub fn mass_accuracy() {
             .read_line(&mut mass_entry)
             .expect("Failed to read line.");
 
-        let measured_index = mass_entry.find('/').unwrap();
-        let measured_mass: f64 = mass_entry[..measured_index].parse().unwrap();
+        let measured_index = match mass_entry.find('/') {
+            Some(n) => n,
+            None => {
+                println!("Formatting not recognized! A '/' wasn't found!");
+                continue;
+            }
+        };
+        let measured_mass: f64 = match mass_entry[..measured_index].parse() {
+            Ok(n) => n,
+            Err(e) => {
+                println!("The measured mass wasn't recognized! You entered: {e}");
+                continue;
+            }
+        };
 
         if !(measured_mass > 0.0) {
-            println!("The measured mass is not recognized! You entered: {measured_mass}");
+            println!("The measured mass is not a positive number! You entered: {measured_mass}");
             continue;
         }
 
         let calculated_index = mass_entry.len();
-        let calculated_mass: f64 = mass_entry[measured_index + 1..calculated_index].trim().parse().unwrap();
+        let calculated_mass: f64 = match mass_entry[measured_index + 1..calculated_index].trim().parse() {
+            Ok(n) => n,
+            Err(e) => {
+                println!("The measured mass wasn't recognized! You entered: {e}");
+                continue;
+            }
+        };
 
         if !(calculated_mass > 0.0) {
-            println!("The expected mass is not recognized! You entered: {calculated_mass}");
+            println!("The expected mass is not a positive number! You entered: {calculated_mass}");
             continue;
         }
 
