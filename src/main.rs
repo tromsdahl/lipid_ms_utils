@@ -1,6 +1,7 @@
 use std::io;
 mod lipid_calculator;
 mod mass_accuracy;
+mod molec_calc;
 
 fn main() {
 
@@ -12,6 +13,7 @@ fn main() {
         println!("\n");
         println!("1. Lipid mass calculator");
         println!("2. ppm Mass accuracy calculator");
+        println!("3. Molecular Formula calculator");
         println!("0. quit.");
 
         let mut user_selection = String::new();
@@ -30,6 +32,7 @@ fn main() {
     match user_selection {
         1 => crate::lipid_calculator::lipid_calc_funct(),
         2 => crate::mass_accuracy::mass_accuracy(),
+        3 => crate::molec_calc::molec_mass_calc(),
         0 => {
             println!("Program closing!");
             break;
